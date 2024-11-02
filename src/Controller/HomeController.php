@@ -56,9 +56,34 @@ class HomeController extends AbstractController
         return $this->redirectToRoute('app_home');
     }
 
-    #[Route('home/delete/{id}', name: 'app_delete', methods: ['DELETE'],)]
+    #[Route('home/delete/{id}', name: 'app_delete')]
     public function delete(Request $request, int $id): Response
     {
+        $task = $this->taskRepository->find($id);
 
+        if(is_null($task)){
+            $this->addFlash('error', 'Task not found');
+            return $this->redirectToRoute('app_home');
+        }
+        $this->taskRepository->delete($task);
+        $this->addFlash('success', 'Task deleted successfully');
+        return $this->redirectToRoute('app_home');
+    }
+
+    #[Route('/home/edit', name: 'app_edit')]
+    public function edit(Request $request, ValidatorInterface $validator): Response
+    {
+        $task = $this->taskRepository->find($request->get('task_id'));
+        if(is_null($task)){
+            $this->addFlash('error', 'Task not found');
+        }
+        $task->setName($request->get('task_name'));
+        $task->setCost($request->get('task_cost'));
+        $task->setLimitDate(new \DateTime($request->get('task_limit_date')));
+        $errors = $validator->validate($task);
+        if(count($errors) === 0){
+            $this->taskRepository->update();
+        }
+        return $this->redirectToRoute('app_home');
     }
 }

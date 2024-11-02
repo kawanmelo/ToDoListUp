@@ -32,15 +32,15 @@ class TaskRepository extends ServiceEntityRepository
 //        ;
 //    }
 
-    public function findOneById($value): ?Task
-    {
-        return $this->createQueryBuilder('t')
-            ->andWhere('t.Id = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
-    }
+//    public function findOneById($value): ?Task
+//    {
+//        return $this->createQueryBuilder('t')
+//            ->andWhere('t.Id = :val')
+//            ->setParameter('val', $value)
+//            ->getQuery()
+//            ->getOneOrNullResult()
+//        ;
+//    }
 
     public function getMaxOrder(): ?int
     {
@@ -60,6 +60,11 @@ class TaskRepository extends ServiceEntityRepository
     public function delete(Task $task): void
     {
         $this->getEntityManager()->remove($task);
+        $this->getEntityManager()->flush();
+    }
+
+    public function update(): void
+    {
         $this->getEntityManager()->flush();
     }
 }
