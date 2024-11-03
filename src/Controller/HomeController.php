@@ -152,7 +152,7 @@ class HomeController extends AbstractController
             }
             $maxOrder = $this->taskRepository->getMaxOrder();
             if($maxOrder === $task->getPresentationOrder()){
-                throw new \LogicException('Task is already on top');
+                throw new \LogicException('Task is already on bottom');
             }
             $lowerTask = $this->taskRepository->getLowerTask($task->getPresentationOrder());
             if(!is_null($lowerTask)){
