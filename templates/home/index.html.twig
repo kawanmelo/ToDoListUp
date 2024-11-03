@@ -8,8 +8,7 @@
                 <h1 class="card-title text-center mb-4">Tasks</h1>
                 <div class="list-group">
                     {% for task in tasks %}
-
-                        <div class="list-group-item d-flex flex-column flex-md-row justify-content-between align-items-center p-3 mb-3 border rounded shadow-sm" {% if task.cost > 1000 %}style="background-color: aquamarine" {% endif %}>
+                        <div class="list-group-item d-flex flex-column flex-md-row justify-content-between align-items-center p-3 mb-3 border rounded shadow-sm" {% if task.cost >= 1000 %}style="background-color: aquamarine" {% endif %}>
 
                             <div class="flex-grow-1 d-flex flex-wrap">
                                 <div class="p-2 me-4">
@@ -46,7 +45,7 @@
                         <p class="text-center text-muted">No tasks available.</p>
                     {% endfor %}
                     <div class="d-flex justify-content-center">
-                        <a class="btn btn-primary" href="https://localhost:8000/home/create">Add a new task</a>
+                        <a class="btn btn-primary" href="{{ path('app_create') }}">Add a new task</a>
                     </div>
                 </div>
             </div>
@@ -109,5 +108,21 @@
         </div>
     </div>
 
+
+    <!-- never put your hands in this code -->
+    {% for type, messages in app.flashes %}
+        {% for message in messages %}
+            {% if type == 'error' %}
+                <div id="notification" class="notification" style="background-color: red; color: white" ></div>
+            {% else %}
+                <div id="notification" class="notification" style="background-color: greenyellow; color: black"></div>
+            {% endif %}
+            <script>
+                showNotification({{ message|json_encode|raw }});
+            </script>
+        {% endfor %}
+    {% endfor %}
 {% endblock %}
+
+
 

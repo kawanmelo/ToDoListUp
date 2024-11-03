@@ -22,14 +22,28 @@
                         <label for="task_limit_date" class="form-label">Limit date</label>
                         <input type="date" class="form-control" id="task_limit_date" name="task_limit_date" required>
                     </div>
-                    <div class="d-grid">
+                    <div class="btn-group gap-2">
                         <button type="submit" class="btn btn-primary">Create</button>
+                        <a class="btn btn-secondary" href="{{ path('app_home') }}" >Back</a>
                     </div>
                 </form>
             </div>
         </div>
     </div>
+    <div id="notification" class="notification" style="background-color: red; color: white" ></div>
+
+    <!-- never put your hands in this code -->
+    {% for type, messages in app.flashes %}
+        {% for message in messages %}
+            <script>
+                showNotification({{ message|json_encode|raw }});
+            </script>
+        {% endfor %}
+    {% endfor %}
+
 {% endblock %}
+
+
 
 
 
