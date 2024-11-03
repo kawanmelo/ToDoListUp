@@ -27,17 +27,18 @@
                             <div class="btn-group mt-3 mt-md-0">
                                 <a
                                     onclick="openEditModal(this)"
-                                    class="btn btn-primary me-2"
+                                    class="btn"
                                     data-bs-toggle="modal"
                                     data-bs-target="#editModal"
                                     data-id="{{ task.id }}"
                                     data-name="{{ task.name }}"
                                     data-cost="{{ task.cost }}"
                                     data-limit-date="{{ task.limitDate|date('Y-m-d') }}">
-                                    Edit
+                                    <img src="{{ asset('icons/edit.png') }}" alt="edit task" width="40" height="40">
                                 </a>
                                 <a onclick="setDeleteUrl('{{ path('app_delete', { id: task.id }) }}')"
-                                   class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#confirmModal">Delete
+                                   class="btn" data-bs-toggle="modal" data-bs-target="#confirmModal">
+                                    <img src="{{ asset('icons/delete.png') }}" alt="delete task" width="40" height="40">
                                 </a>
                             </div>
                         </div>
