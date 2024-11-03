@@ -65,6 +65,16 @@ class TaskRepository extends ServiceEntityRepository
             ->getOneOrNullResult();
     }
 
+    public function getLowerTask(int $order): ?Task
+    {
+        $targetOrder = $order + 1;
+        return $this->createQueryBuilder('t')
+            ->andWhere('t.PresentationOrder = :order')
+            ->setParameter('order', $targetOrder)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
+
 
 
     public function create(Task $task): void

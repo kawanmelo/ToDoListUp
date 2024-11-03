@@ -116,7 +116,7 @@ class HomeController extends AbstractController
     }
 
     #[Route('/home/moveup/{id}', name: 'app_moveup')]
-    public function moveup(int $id): Response
+    public function moveUp(int $id): Response
     {
         try{
             $task = $this->taskRepository->find($id);
@@ -131,6 +131,33 @@ class HomeController extends AbstractController
             if(!is_null($upperTask)){
                 $task->setPresentationOrder($task->getPresentationOrder() - 1);
                 $upperTask->setPresentationOrder($upperTask->getPresentationOrder() + 1);
+                $this->taskRepository->update();
+                $this->addFlash('success', 'Task moved up successfully');
+                return $this->redirectToRoute('app_home');
+            }
+            throw new LogicException('Error in moving task');
+        }catch(InvalidArgumentException |\LogicException $e){
+            $this->addFlash('error', $e->getMessage());
+            return $this->redirectToRoute('app_home');
+        }
+    }
+
+    #[Route('home/movedown/{id}', name: 'app_movedown')]
+    public function moveDown(int $id): Response
+    {
+        try{
+            $task = $this->taskRepository->find($id);
+            if(is_null($task)){
+                throw new InvalidArgumentException('Task not found');
+            }
+            $maxOrder = $this->taskRepository->getMaxOrder();
+            if($maxOrder === $task->getPresentationOrder()){
+                throw new \LogicException('Task is already on top');
+            }
+            $lowerTask = $this->taskRepository->getLowerTask($task->getPresentationOrder());
+            if(!is_null($lowerTask)){
+                $task->setPresentationOrder($task->getPresentationOrder() + 1);
+                $lowerTask->setPresentationOrder($lowerTask->getPresentationOrder() - 1);
                 $this->taskRepository->update();
                 $this->addFlash('success', 'Task moved up successfully');
                 return $this->redirectToRoute('app_home');
