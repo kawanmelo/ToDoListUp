@@ -8,6 +8,7 @@ use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use Doctrine\ORM\EntityManager;
 use InvalidArgumentException;
 use PHPUnit\Exception;
+use Symfony\Component\Cache\Exception\LogicException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -28,7 +29,7 @@ class HomeController extends AbstractController
     #[Route('/home', name: 'app_home', methods: ['GET'])]
     public function index(): Response
     {
-        $tasks = $this->taskRepository->findAll();
+        $tasks = $this->taskRepository->getAllOrdered();
 
         return $this->render('home/index.html.twig', [
             'tasks' => $tasks,
@@ -104,12 +105,39 @@ class HomeController extends AbstractController
             $errors = $validator->validate($task);
             if (count($errors) === 0) {
                 $this->taskRepository->update();
-                $this->addFlash('error', 'Task updated successfully');
+                $this->addFlash('success', 'Task updated successfully');
                 return $this->redirectToRoute('app_home');
             }
             throw new ValidationFailedException($task, $errors);
         } catch (InvalidArgumentException | \TypeError | ValidationFailedException $e) {
             $this->addFlash('error', 'Error in edit task');
+            return $this->redirectToRoute('app_home');
+        }
+    }
+
+    #[Route('/home/moveup/{id}', name: 'app_moveup')]
+    public function moveup(int $id): Response
+    {
+        try{
+            $task = $this->taskRepository->find($id);
+            if(is_null($task)){
+                throw new InvalidArgumentException('Task not found');
+            }
+            $minOrder = $this->taskRepository->getMinOrder();
+            if($minOrder === $task->getPresentationOrder()){
+                throw new \LogicException('Task is already on top');
+            }
+            $upperTask = $this->taskRepository->getUpperTask($task->getPresentationOrder());
+            if(!is_null($upperTask)){
+                $task->setPresentationOrder($task->getPresentationOrder() - 1);
+                $upperTask->setPresentationOrder($upperTask->getPresentationOrder() + 1);
+                $this->taskRepository->update();
+                $this->addFlash('success', 'Task moved up successfully');
+                return $this->redirectToRoute('app_home');
+            }
+            throw new LogicException('Error in moving task');
+        }catch(InvalidArgumentException |\LogicException $e){
+            $this->addFlash('error', $e->getMessage());
             return $this->redirectToRoute('app_home');
         }
     }

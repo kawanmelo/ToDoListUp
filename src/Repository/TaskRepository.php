@@ -24,7 +24,7 @@ class TaskRepository extends ServiceEntityRepository
     {
         return $this->createQueryBuilder('t')
             ->select()
-            ->orderBy('t.Cost', 'DESC')
+            ->orderBy('t.PresentationOrder', 'ASC')
             ->getQuery()
             ->getResult();
     }
@@ -46,6 +46,25 @@ class TaskRepository extends ServiceEntityRepository
             ->getQuery()
             ->getSingleScalarResult();
     }
+
+    public function getMinOrder(): ?int
+    {
+        return $this->createQueryBuilder('t')
+            ->select('MIN(t.PresentationOrder)')
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
+
+    public function getUpperTask(int $order): ?Task
+    {
+        $targetOrder = $order - 1;
+        return $this->createQueryBuilder('t')
+            ->andWhere('t.PresentationOrder = :order')
+            ->setParameter('order', $targetOrder)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
+
 
 
     public function create(Task $task): void
