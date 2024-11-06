@@ -26,6 +26,13 @@ class HomeController extends AbstractController
         $this->taskRepository = $taskRepository;
     }
 
+    // temporally redirect
+    #[Route('/', name: 'redirect_home')]
+    public function redirectToHome(): Response
+    {
+        return $this->redirectToRoute('app_home');
+    }
+
     #[Route('/home', name: 'app_home', methods: ['GET'])]
     public function index(): Response
     {
@@ -159,7 +166,7 @@ class HomeController extends AbstractController
                 $task->setPresentationOrder($task->getPresentationOrder() + 1);
                 $lowerTask->setPresentationOrder($lowerTask->getPresentationOrder() - 1);
                 $this->taskRepository->update();
-                $this->addFlash('success', 'Task moved up successfully');
+                $this->addFlash('success', 'Task moved down successfully');
                 return $this->redirectToRoute('app_home');
             }
             throw new LogicException('Error in moving task');
