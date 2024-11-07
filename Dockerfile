@@ -1,5 +1,5 @@
-# Usa uma imagem do PHP com Apache
-FROM php:8.2-apache
+# Usa a imagem PHP 8.2 com suporte a Apache
+FROM php:8.2-cli
 
 # Instala as extensões PHP necessárias para Symfony e MySQL
 RUN apt-get update && apt-get install -y \
@@ -28,17 +28,11 @@ RUN chown -R www-data:www-data var
 # Define a variável de ambiente para produção
 ENV APP_ENV=prod
 
-# Configura Apache para rodar na pasta public/
-RUN sed -i 's|DocumentRoot /var/www/html|DocumentRoot /var/www/html/public|' /etc/apache2/sites-available/000-default.conf
-
-# Habilita o módulo de reescrita do Apache para Symfony
-RUN a2enmod rewrite
-
 # Limpa o cache
 RUN php bin/console cache:clear
 
-# Exposição da porta padrão do Apache
+# Expõe a porta 80, que é a porta padrão do servidor do PHP
 EXPOSE 80
 
-# Comando para iniciar o servidor Apache
-CMD ["apache2-foreground"]
+# Comando para rodar o servidor embutido do PHP
+CMD ["php", "-S", "0.0.0.0:80", "-t", "public"]
