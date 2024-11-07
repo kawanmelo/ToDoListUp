@@ -90,6 +90,15 @@ class HomeController extends AbstractController
                 throw new InvalidArgumentException();
             }
             $this->taskRepository->delete($task);
+
+            $tasks = $this->taskRepository->getAllOrdered();
+            $order = 1;
+            foreach ($tasks as $task) {
+                $task->setPresentationOrder($order);
+                $order++;
+            }
+            $this->taskRepository->update();
+
             $this->addFlash('success', 'Task deleted successfully');
             return $this->redirectToRoute('app_home');
         } catch (InvalidArgumentException $e) {
@@ -97,6 +106,7 @@ class HomeController extends AbstractController
             return $this->redirectToRoute('app_home');
         }
     }
+
 
     #[Route('/home/edit', name: 'app_edit')]
     public function edit(Request $request, ValidatorInterface $validator): Response
