@@ -25,9 +25,6 @@ RUN composer install --no-dev --optimize-autoloader
 # Define as permissões da pasta var para permitir gravação
 RUN chown -R www-data:www-data var
 
-# Conceder permissões corretas para o Apache acessar o diretório público e os arquivos gerados
-RUN chown -R www-data:www-data /var/www/html/public /var/www/html/var
-
 # Define a variável de ambiente para produção
 ENV APP_ENV=prod
 
@@ -35,7 +32,7 @@ ENV APP_ENV=prod
 RUN sed -i 's|DocumentRoot /var/www/html|DocumentRoot /var/www/html/public|' /etc/apache2/sites-available/000-default.conf
 
 # Habilita o módulo de reescrita do Apache para Symfony
-RUN a2enmod rewrite && service apache2 restart
+RUN a2enmod rewrite
 
 # Limpa o cache
 RUN php bin/console cache:clear
