@@ -7,7 +7,7 @@
                 <p class="card-text text-center mb-4">
                     Create a task
                 </p>
-                <form action="{{ path('app_persist') }}" method="POST">
+                <form action="{{ path('app_task_create') }}" method="POST">
                     <div class="mb-3">
                         <label for="task_name" class="form-label">Name</label>
                         <input type="text" class="form-control" id="task_name" name="task_name"
