@@ -20,7 +20,7 @@ class TaskRepository extends ServiceEntityRepository
     /**
      * @return Task[] Returns an array of Task objects
      */
-    public function getAllOrdered(): array
+    public function findAllOrdered(): array
     {
         return $this->createQueryBuilder('t')
             ->select()
@@ -39,7 +39,7 @@ class TaskRepository extends ServiceEntityRepository
 //        ;
 //    }
 
-    public function getMaxOrder(): ?int
+    public function findMaxOrder(): ?int
     {
         return $this->createQueryBuilder('t')
             ->select('MAX(t.PresentationOrder)')
@@ -47,7 +47,7 @@ class TaskRepository extends ServiceEntityRepository
             ->getSingleScalarResult();
     }
 
-    public function getMinOrder(): ?int
+    public function findMinOrder(): ?int
     {
         return $this->createQueryBuilder('t')
             ->select('MIN(t.PresentationOrder)')
@@ -55,7 +55,7 @@ class TaskRepository extends ServiceEntityRepository
             ->getSingleScalarResult();
     }
 
-    public function getUpperTask(int $order): ?Task
+    public function findUpperTask(int $order): ?Task
     {
         $targetOrder = $order - 1;
         return $this->createQueryBuilder('t')
@@ -65,7 +65,7 @@ class TaskRepository extends ServiceEntityRepository
             ->getOneOrNullResult();
     }
 
-    public function getLowerTask(int $order): ?Task
+    public function findLowerTask(int $order): ?Task
     {
         $targetOrder = $order + 1;
         return $this->createQueryBuilder('t')

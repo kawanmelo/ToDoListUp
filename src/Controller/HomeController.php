@@ -32,7 +32,7 @@ class HomeController extends AbstractController
     #[Route('/home', name: 'app_home', methods: ['GET'])]
     public function index(): Response
     {
-        $tasks = $this->taskRepository->getAllOrdered();
+        $tasks = $this->taskRepository->findAllOrdered();
 
         return $this->render('home/index.html.twig', [
             'tasks' => $tasks,
