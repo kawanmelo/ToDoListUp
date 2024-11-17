@@ -51,7 +51,7 @@ class TaskController extends AbstractController
         return $this->redirectToRoute('app_task');
     }
 
-    #[Route('/task/delete/{id}', name: 'app_task_delete')]
+    #[Route('/task/delete/{id<\d+>}', name: 'app_task_delete')]
     public function delete(int $id): Response
     {
         $result = $this->taskService->deleteTask($id);
@@ -80,7 +80,7 @@ class TaskController extends AbstractController
         return $this->redirectToRoute('app_home');
     }
 
-    #[Route('/task/moveup/{id}', name: 'app_task_moveup')]
+    #[Route('/task/moveup/{id<\d+>}', name: 'app_task_moveup')]
     public function moveUp(int $id): Response
     {
         $result = $this->taskService->moveTaskUp($id);
@@ -93,7 +93,7 @@ class TaskController extends AbstractController
         return $this->redirectToRoute('app_home');
     }
 
-    #[Route('task/movedown/{id}', name: 'app_task_movedown')]
+    #[Route('task/movedown/{id<\d+>}', name: 'app_task_movedown')]
     public function moveDown(int $id): Response
     {
         $result = $this->taskService->moveTaskDown($id);

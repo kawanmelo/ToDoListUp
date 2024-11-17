@@ -39,7 +39,7 @@ class HomeController extends AbstractController
         ]);
     }
 
-    #[Route('home/count/{direction}', name: 'app_count', methods: ['GET'])]
+    #[Route('home/count/{direction<up|down>}', name: 'app_count', methods: ['GET'])]
     public function count(string $direction): JsonResponse
     {
         if($direction === 'up'){
