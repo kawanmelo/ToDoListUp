@@ -6,9 +6,9 @@ class ServiceOperationResult
 {
     private bool $Success;
     private string $Message;
-    private ?object $Result;
+    private array $Result;
 
-    public function __construct(bool $Success, string $Message, object $Result=null)
+    public function __construct(bool $Success, string $Message, array $Result=null)
     {
         $this->Success = $Success;
         $this->Message = $Message;
@@ -20,7 +20,7 @@ class ServiceOperationResult
         return $this->Message;
     }
 
-    public function getResult(): ?object
+    public function getResult(): ?array
     {
         return $this->Result;
     }
